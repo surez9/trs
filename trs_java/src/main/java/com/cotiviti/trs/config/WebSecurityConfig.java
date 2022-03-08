@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 
 		httpSecurity.csrf().disable()
-				.authorizeRequests().antMatchers("/login").permitAll().
+				.authorizeRequests().antMatchers("/login","/user/createUser").permitAll().
 				antMatchers(HttpMethod.POST, "/flight/**").hasAuthority("admin").
 				antMatchers(HttpMethod.PUT, "/flight/**").hasAuthority("admin").
 				antMatchers(HttpMethod.DELETE, "/flight/**").hasAuthority("admin").

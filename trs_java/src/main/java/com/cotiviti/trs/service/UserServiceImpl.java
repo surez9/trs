@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private final UserRepository userRepo;
+
+//	@Autowired(required = false)
+//	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -67,7 +71,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public ServiceResponse createUser(User newUser) {
-		return null;
+		User user = userRepo.findByUsername(newUser.getUsername());
+		if (user==null) {
+
+			//newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+			userRepo.save(newUser);
+			ServiceResponse response=new ServiceResponse(true,"save Success");
+			return  response;
+		} else {
+			ServiceResponse response = new ServiceResponse(false, "User Already exist");
+			return response;
+		}
 	}
 
 	public ServiceResponse updateUser(User updateUser) {
