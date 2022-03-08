@@ -12,7 +12,8 @@ public class ScheduledFlight {
 
 	@Id
 	@Column(name = "schedule_flight_id")
-	private BigInteger scheduleFlightId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer scheduleFlightId;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	private Flight flight;

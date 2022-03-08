@@ -10,11 +10,9 @@ public interface FlightService {
 
 	public ServiceResponse viewAllFlight();
 
-	public Flight viewFlight(BigInteger flightNumber);
-
 	public ServiceResponse modifyFlight(Flight flight);
 
-	public ServiceResponse removeFlight(BigInteger flightNumber);
+	public ServiceResponse removeFlight(Long flightNumber);
 
-	ServiceResponse viewFlightById(BigInteger flightNo);
+	ServiceResponse viewFlightById(Long flightNo);
 }

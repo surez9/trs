@@ -23,7 +23,8 @@ public class Flight {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private BigInteger flightNo;
+
+    private Long flightNo;
     private String carrierName;
     private String flightModel;
     private int seatCapacity;

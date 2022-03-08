@@ -1,5 +1,6 @@
 package com.cotiviti.trs.controller;
 
+import com.cotiviti.trs.dto.ScheduleDto;
 import com.cotiviti.trs.model.Schedule;
 import com.cotiviti.trs.model.ScheduledFlight;
 import com.cotiviti.trs.response.ServiceResponse;
@@ -27,28 +28,36 @@ public class ScheduledFlightController {
 	@Autowired
 	FlightService flightService;
 
-	@PostMapping("/add")
-	public ResponseEntity<?> addSF(@ModelAttribute ScheduledFlight scheduledFlight,
-								   @RequestParam(name = "deptDateTime") String departureTime,
-								   @RequestParam(name = "arrDateTime") String arrivalTime) {
-		Schedule schedule = new Schedule();
-		schedule.setScheduleId(scheduledFlight.getScheduleFlightId());
-		schedule.setDeptDateTime(departureTime);
-		schedule.setArrDateTime(arrivalTime);
-		scheduledFlight.setFlight(flightService.viewFlight(scheduledFlight.getScheduleFlightId()));
-		scheduledFlight.setSchedule(schedule);
-		scheduledFlight.setAvailableSeats(scheduledFlight.getFlight().getSeatCapacity());
-		ServiceResponse response = scheduleFlightService.addScheduledFlight(scheduledFlight);
-		if (response.isSuccess()) {
-			return ResponseEntity.ok().body(response);
-		} else {
-			return ResponseEntity.badRequest().body(response);
-		}
+//	@PostMapping("/add")
+//	public ResponseEntity<?> addSF(@ModelAttribute ScheduledFlight scheduledFlight,
+//								   @RequestParam(name = "deptDateTime") String departureTime,
+//								   @RequestParam(name = "arrDateTime") String arrivalTime) {
+//		Schedule schedule = new Schedule();
+//		schedule.setScheduleId(scheduledFlight.getScheduleFlightId());
+//		schedule.setDeptDateTime(departureTime);
+//		schedule.setArrDateTime(arrivalTime);
+//		scheduledFlight.setFlight(flightService.viewFlight(scheduledFlight.getScheduleFlightId()));
+//		scheduledFlight.setSchedule(schedule);
+//		scheduledFlight.setAvailableSeats(scheduledFlight.getFlight().getSeatCapacity());
+//		ServiceResponse response = scheduleFlightService.addScheduledFlight(scheduledFlight);
+//		if (response.isSuccess()) {
+//			return ResponseEntity.ok().body(response);
+//		} else {
+//			return ResponseEntity.badRequest().body(response);
+//		}
+//	}
+@PostMapping("/add")
+public ResponseEntity<?> addSF(@RequestBody ScheduleDto scheduleDto) {
+	ServiceResponse response = scheduleFlightService.addScheduledFlight(scheduleDto);
+	if (response.isSuccess()) {
+		return ResponseEntity.ok().body(response);
+	} else {
+		return ResponseEntity.badRequest().body(response);
 	}
-
+}
 
 	@PutMapping("/modify")
-	public ResponseEntity<?> modifyScheduleFlight(@ModelAttribute ScheduledFlight scheduleFlight) {
+	public ResponseEntity<?> modifyScheduleFlight(@RequestBody ScheduleDto scheduleFlight) {
 		ServiceResponse response =  scheduleFlightService.modifyScheduledFlight(scheduleFlight);
 		if (response.isSuccess()) {
 			return ResponseEntity.ok().body(response);
@@ -59,7 +68,7 @@ public class ScheduledFlightController {
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<?> deleteSF(@RequestParam BigInteger flightId) {
+	public ResponseEntity<?> deleteSF(@RequestParam Integer flightId) {
 		ServiceResponse response =  scheduleFlightService.removeScheduledFlight(flightId);
 		if (response.isSuccess()) {
 			return ResponseEntity.ok().body(response);
@@ -69,7 +78,7 @@ public class ScheduledFlightController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<?> viewSF(@RequestParam BigInteger flightId)  {
+	public ResponseEntity<?> viewSF(@RequestParam Integer flightId)  {
 		ServiceResponse response = scheduleFlightService.viewScheduledFlight(flightId);
 		if (response.isSuccess()) {
 			return ResponseEntity.ok().body(response);

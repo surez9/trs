@@ -16,7 +16,8 @@ import java.math.BigInteger;
 public class Schedule {
 	@Id
 	@Column(name = "schedule_Id")
-	private BigInteger scheduleId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer scheduleId;
 
 	@Column(name = "departure_date")
 	private String deptDateTime;

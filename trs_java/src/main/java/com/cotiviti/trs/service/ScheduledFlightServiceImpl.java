@@ -1,10 +1,14 @@
 package com.cotiviti.trs.service;
 
+import com.cotiviti.trs.dto.ScheduleDto;
+import com.cotiviti.trs.model.Flight;
 import com.cotiviti.trs.model.Schedule;
 import com.cotiviti.trs.model.ScheduledFlight;
+import com.cotiviti.trs.repository.FlightRepository;
 import com.cotiviti.trs.repository.ScheduleRepository;
 import com.cotiviti.trs.repository.ScheduledFlightRepository;
 import com.cotiviti.trs.response.ServiceResponse;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,29 +31,40 @@ public class ScheduledFlightServiceImpl implements ScheduledFlightService {
 	ScheduleRepository scheduleRepository;
 
 	@Autowired
+	FlightRepository flightRepository;
+
+	@Autowired
 	BookingService bookingService;
 
 
-	public ServiceResponse addScheduledFlight(ScheduledFlight scheduledFlight) {
-		 scheduledFlightRepository.save(scheduledFlight);
+//	public ServiceResponse addScheduledFlight(ScheduledFlight scheduledFlight) {
+//		 scheduledFlightRepository.save(scheduledFlight);
+//		ServiceResponse response=new ServiceResponse(true,"Schedule Successfully saved");
+//		return  response;
+//	}
+	public ServiceResponse addScheduledFlight(ScheduleDto scheduleDto) {
+
+		ScheduledFlight scheduledFlight = new ScheduledFlight();
+		scheduledFlight.setFlight(flightRepository.findByFlightNo(scheduleDto.getFlightNo()).get());
+		scheduledFlight.setSchedule(scheduleRepository.findById(scheduleDto.getScheduleId()).get());
+		scheduledFlight.setAvailableSeats(scheduleDto.getAvailableSeats());
+		scheduledFlightRepository.save(scheduledFlight);
 		ServiceResponse response=new ServiceResponse(true,"Schedule Successfully saved");
 		return  response;
 	}
 
-
-	public ServiceResponse modifyScheduledFlight(ScheduledFlight scheduleFlight) {
+	public ServiceResponse modifyScheduledFlight(ScheduleDto scheduleFlight) {
 		ScheduledFlight updateScheduleFlight = scheduledFlightRepository.findById(scheduleFlight.getScheduleFlightId()).get();
-		Schedule updateSchedule = scheduleRepository.findById(scheduleFlight.getSchedule().getScheduleId()).get();
 		updateScheduleFlight.setAvailableSeats(scheduleFlight.getAvailableSeats());
-		updateSchedule.setArrDateTime(scheduleFlight.getSchedule().getArrDateTime());
-		updateSchedule.setDeptDateTime(scheduleFlight.getSchedule().getDeptDateTime());
+		updateScheduleFlight.setFlight(flightRepository.findByFlightNo(scheduleFlight.getFlightNo()).get());
+		updateScheduleFlight.setSchedule(scheduleRepository.findById(scheduleFlight.getScheduleId()).get());
 		scheduledFlightRepository.save(updateScheduleFlight);
 		ServiceResponse response=new ServiceResponse(true,"Schedule Successfully updated");
 		return  response;
 	}
 
 
-	public ServiceResponse removeScheduledFlight(BigInteger flightId)  {
+	public ServiceResponse removeScheduledFlight(Integer flightId)  {
 		if (flightId == null){
 			ServiceResponse response=new ServiceResponse(false,"No data found");
 			return  response;
@@ -75,7 +90,7 @@ public class ScheduledFlightServiceImpl implements ScheduledFlightService {
 		return  response;
 	}
 
-	public ServiceResponse viewScheduledFlight(BigInteger flightId)  {
+	public ServiceResponse viewScheduledFlight(Integer flightId)  {
 		if (flightId == null) {
 			ServiceResponse response = new ServiceResponse(false, "No data found");
 			return response;

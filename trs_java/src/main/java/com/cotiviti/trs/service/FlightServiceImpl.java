@@ -20,13 +20,13 @@ public class FlightServiceImpl implements FlightService {
 
 	@Override
 	public ServiceResponse addFlight(Flight flight) {
-		Optional<Flight> findById = flightRepository.findById(flight.getFlightNo());
+		Optional<Flight> findById = flightRepository.findByFlightNo(flight.getFlightNo());
 			if (!findById.isPresent()) {
 				flightRepository.save(flight);
 				ServiceResponse response = new ServiceResponse(true, "Flight Successfully saved");
 				return response;
 			} else {
-				ServiceResponse response = new ServiceResponse(false, "Schedule didn't saved");
+				ServiceResponse response = new ServiceResponse(false, "This Flight is already added!!!");
 				return response;
 			}
 
@@ -42,34 +42,23 @@ public class FlightServiceImpl implements FlightService {
 		return  response;
 	}
 
-	@Override
-	public Flight viewFlight(BigInteger flightNumber) {
-		Optional<Flight> findById = flightRepository.findById(flightNumber);
-		if (findById.isPresent()) {
-			return findById.get();
-		}
-		else
-		{
-			return null;
-		}
-	}
 
 	@Override
-	public ServiceResponse viewFlightById(BigInteger flightNumber) {
-		Optional<Flight> findById = flightRepository.findById(flightNumber);
+	public ServiceResponse viewFlightById(Long flightNumber) {
+		Optional<Flight> findById = flightRepository.findByFlightNo(flightNumber);
 		if (findById.isPresent()) {
 			Map<String, Object> result = new HashMap<>();
-			result.put("flight", findById);
+			result.put("flight", findById.get());
 			ServiceResponse response = new ServiceResponse(true, result);
 			return response;
 		} else {
-			ServiceResponse response = new ServiceResponse(false, "NOdata found");
+			ServiceResponse response = new ServiceResponse(false, "NO data found");
 			return response;
 		}
 	}
 	@Override
 	public ServiceResponse modifyFlight(Flight flight) {
-		Optional<Flight> findById = flightRepository.findById(flight.getFlightNo());
+		Optional<Flight> findById = flightRepository.findByFlightNo(flight.getFlightNo());
 		if (findById.isPresent()) {
 			flightRepository.save(flight);
 			ServiceResponse response = new ServiceResponse(true, "Data updated");
@@ -82,15 +71,15 @@ public class FlightServiceImpl implements FlightService {
 	}
 
 
-	public ServiceResponse removeFlight(BigInteger flightNumber) {
-		Optional<Flight> findById = flightRepository.findById(flightNumber);
+	public ServiceResponse removeFlight(Long flightNumber) {
+		Optional<Flight> findById = flightRepository.findByFlightNo(flightNumber);
 		if (findById.isPresent()) {
-			flightRepository.deleteById(flightNumber);
+			flightRepository.deleteByFlightNo(flightNumber);
 			ServiceResponse response = new ServiceResponse(true, " data deleted");
 			return response;
 		} else {
 
-			ServiceResponse response = new ServiceResponse(false, "No data delted");
+			ServiceResponse response = new ServiceResponse(false, "No data deleted");
 			return response;
 		}
 	}

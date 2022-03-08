@@ -37,7 +37,7 @@ public class FlightController {
 	}
 
 	@GetMapping("/viewFlight/{id}")
-	public ResponseEntity<?> viewFlight(@PathVariable("id") BigInteger flightNo) {
+	public ResponseEntity<?> viewFlight(@PathVariable("id") Long flightNo) {
 		ServiceResponse response=  flightService.viewFlightById(flightNo);
 		if (response.isSuccess()) {
 			return ResponseEntity.ok().body(response);
@@ -57,7 +57,7 @@ public class FlightController {
 	}
 
 	@DeleteMapping("/deleteFlight/{id}")
-	public ResponseEntity<?> removeFlight(@PathVariable("id") BigInteger flightNo) {
+	public ResponseEntity<?> removeFlight(@PathVariable("id") Long flightNo) {
 		ServiceResponse response=flightService.removeFlight(flightNo);
 		if (response.isSuccess()) {
 			return ResponseEntity.ok().body(response);
